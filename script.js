@@ -18,6 +18,15 @@ if (menuToggle && primaryNav) {
   });
 }
 
+const siteHeader = document.querySelector('.site-header');
+if (siteHeader) {
+  const updateHeaderSize = () => {
+    siteHeader.classList.toggle('is-compact', window.scrollY > 32);
+  };
+  updateHeaderSize();
+  window.addEventListener('scroll', updateHeaderSize, { passive: true });
+}
+
 document.querySelectorAll('[data-year]').forEach((element) => {
   element.textContent = new Date().getFullYear();
 });
