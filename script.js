@@ -113,6 +113,38 @@ if (collectionGrid) {
   });
 }
 
+function createMarketplaceIcon(name) {
+  const namespace = 'http://www.w3.org/2000/svg';
+  const icon = document.createElementNS(namespace, 'svg');
+  icon.setAttribute('viewBox', '0 0 28 28');
+  icon.setAttribute('class', `marketplace-icon marketplace-icon-${name.toLowerCase()}`);
+  icon.setAttribute('aria-hidden', 'true');
+  icon.setAttribute('focusable', 'false');
+
+  const shape = (tag, attributes, text = '') => {
+    const element = document.createElementNS(namespace, tag);
+    Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+    if (text) element.textContent = text;
+    icon.append(element);
+  };
+
+  if (name === 'Amazon') {
+    shape('text', { x: '13', y: '17', 'text-anchor': 'middle', 'font-family': 'Arial, sans-serif', 'font-size': '17', 'font-weight': '700', fill: 'currentColor' }, 'a');
+    shape('path', { d: 'M4.5 19.1c5.2 3.3 12.8 3.4 18 .1', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.5', 'stroke-linecap': 'round' });
+    shape('path', { d: 'm19.4 17.7 3.1 1.3-2.8 1.8', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.3', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+  } else if (name === 'Meesho') {
+    shape('path', { d: 'M4.5 20V8h3v1.7c.7-1.2 1.7-1.9 3-1.9 1.5 0 2.5.7 3 2 .7-1.3 1.8-2 3.3-2 2.4 0 3.8 1.6 3.8 4.2V20h-3.2v-7.5c0-1.2-.5-1.9-1.4-1.9-1 0-1.6.8-1.6 2.2V20h-3.2v-7.5c0-1.2-.5-1.9-1.4-1.9-1 0-1.6.8-1.6 2.2V20z', fill: 'currentColor' });
+  } else if (name === 'Flipkart') {
+    shape('path', { d: 'M8 9V7a6 6 0 0 1 12 0v2', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round' });
+    shape('path', { d: 'M5.5 9h17l-1.5 15h-14z', fill: 'currentColor' });
+    shape('path', { d: 'M11 12h6v2.2h-3.7v1.4h3.2v2h-3.2v2.2H11z', fill: '#ffd23f' });
+  } else {
+    return null;
+  }
+
+  return icon;
+}
+
 function renderMarketplaces(container, urls = {}) {
   if (!container) return;
   container.replaceChildren();
@@ -124,20 +156,13 @@ function renderMarketplaces(container, urls = {}) {
       item.href = url;
       item.target = '_blank';
       item.rel = 'noreferrer';
-    } else {
-      item.setAttribute('aria-disabled', 'true');
     }
-    const mark = document.createElement('span');
-    mark.className = `retailer-mark ${marketplace.className}`;
-    mark.setAttribute('aria-hidden', 'true');
-    mark.textContent = marketplace.name.slice(0, 1);
+    const mark = createMarketplaceIcon(marketplace.name);
     const text = document.createElement('span');
     text.className = 'marketplace-copy';
     const name = document.createElement('strong');
     name.textContent = marketplace.name;
-    const status = document.createElement('small');
-    status.textContent = url ? 'Shop Indra' : 'Official link to be added';
-    text.append(name, status);
+    text.append(name);
     item.append(mark, text);
     if (url) {
       const arrow = document.createElement('span');
@@ -204,6 +229,12 @@ document.querySelectorAll('.footer-social > span').forEach((profile) => {
   const name = profile.textContent.split('·')[0].trim();
   const icon = createSocialIcon(name);
   if (icon) profile.prepend(icon);
+});
+
+document.querySelectorAll('.footer-column[aria-label="Shop"] > span').forEach((platform) => {
+  const name = platform.textContent.split('·')[0].trim();
+  const icon = createMarketplaceIcon(name);
+  if (icon) platform.prepend(icon);
 });
 
 const filterButtons = document.querySelectorAll('[data-filter]');
