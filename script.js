@@ -150,6 +150,36 @@ function renderMarketplaces(container, urls = {}) {
 
 document.querySelectorAll('[data-marketplaces]').forEach((container) => renderMarketplaces(container));
 
+function createSocialIcon(name) {
+  const namespace = 'http://www.w3.org/2000/svg';
+  const icon = document.createElementNS(namespace, 'svg');
+  icon.setAttribute('viewBox', '0 0 24 24');
+  icon.setAttribute('class', `social-icon social-icon-${name.toLowerCase()}`);
+  icon.setAttribute('aria-hidden', 'true');
+  icon.setAttribute('focusable', 'false');
+
+  const shape = (tag, attributes) => {
+    const element = document.createElementNS(namespace, tag);
+    Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+    icon.append(element);
+  };
+
+  if (name === 'Instagram') {
+    shape('rect', { x: '3', y: '3', width: '18', height: '18', rx: '5', fill: 'none', stroke: 'currentColor', 'stroke-width': '2' });
+    shape('circle', { cx: '12', cy: '12', r: '4', fill: 'none', stroke: 'currentColor', 'stroke-width': '2' });
+    shape('circle', { cx: '17.5', cy: '6.5', r: '1.2', fill: 'currentColor' });
+  } else if (name === 'Facebook') {
+    shape('path', { d: 'M13.4 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V3.9c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.2V10H7.7v3h2.6v8h3.1z', fill: 'currentColor' });
+  } else if (name === 'YouTube') {
+    shape('rect', { x: '2.5', y: '5', width: '19', height: '14', rx: '4', fill: 'currentColor' });
+    shape('path', { d: 'M10 8.8v6.4l5.4-3.2z', fill: '#ffffff' });
+  } else {
+    return null;
+  }
+
+  return icon;
+}
+
 document.querySelectorAll('[data-social-links]').forEach((container) => {
   (window.indraSocialLinks || []).forEach((profile) => {
     const item = profile.url ? document.createElement('a') : document.createElement('span');
@@ -161,14 +191,19 @@ document.querySelectorAll('[data-social-links]').forEach((container) => {
     } else {
       item.setAttribute('aria-disabled', 'true');
     }
-    const symbol = document.createElement('span');
-    symbol.setAttribute('aria-hidden', 'true');
-    symbol.textContent = profile.symbol;
+    const icon = createSocialIcon(profile.name);
     const label = document.createElement('span');
     label.textContent = profile.name;
-    item.append(symbol, label);
+    if (icon) item.append(icon);
+    item.append(label);
     container.append(item);
   });
+});
+
+document.querySelectorAll('.footer-social > span').forEach((profile) => {
+  const name = profile.textContent.split('·')[0].trim();
+  const icon = createSocialIcon(name);
+  if (icon) profile.prepend(icon);
 });
 
 const filterButtons = document.querySelectorAll('[data-filter]');
