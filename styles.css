@@ -34,6 +34,7 @@ button { color: inherit; font: inherit; }
 .bag-link { display: flex; align-items: center; gap: 8px; }
 .bag-link span { display: inline-grid; place-items: center; width: 19px; height: 19px; border: 1px solid var(--line); border-radius: 50%; font-size: 9px; }
 .menu-toggle { display: none; }
+[data-button-visibility][hidden] { display: none !important; }
 .home-hero { height: min(690px, calc(100svh - 72px)); min-height: 530px; position: relative; overflow: hidden; background: var(--soft); }
 .home-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(255,255,255,.97) 0%, rgba(255,255,255,.88) 30%, rgba(255,255,255,.18) 61%, transparent 100%); }
 .hero-image { position: absolute; inset: 0; object-position: 54% 39%; }
