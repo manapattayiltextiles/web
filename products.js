@@ -108,7 +108,7 @@ window.indraMarketplaces = [
 ];
 
 window.indraSocialLinks = [
-  { name: "Instagram", url: "", symbol: "◎" },
+  { name: "Instagram", url: "https://www.instagram.com/indra_klothing/", symbol: "◎" },
   { name: "YouTube", url: "", symbol: "▶" },
   { name: "Facebook", url: "", symbol: "f" }
 ];

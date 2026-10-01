@@ -1,5 +1,160 @@
+function createConfiguredLink(item, className = '', visibilityKey = '') {
+  const element = document.createElement(item.href ? 'a' : 'span');
+  if (className) element.className = className;
+  if (visibilityKey) element.dataset.buttonVisibility = visibilityKey;
+  element.hidden = item.visible === false;
+  element.textContent = item.label;
+  if (item.href) {
+    element.href = item.href;
+    if (item.href.startsWith('https://')) {
+      element.target = '_blank';
+      element.rel = 'noreferrer';
+    }
+  }
+  return element;
+}
+
+function createVisibilityKey(group, label) {
+  const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return `${group}:${slug}`;
+}
+
+function renderSiteShell() {
+  const config = window.indraSiteConfig;
+  if (!config) return;
+
+  const page = window.location.pathname.split('/').pop() || 'index.html';
+  const actions = config.headerActions[page] || config.headerActions['index.html'];
+  const headerMount = document.querySelector('[data-site-header]');
+  if (headerMount) {
+    const header = document.createElement('header');
+    header.className = 'site-header';
+
+    const brand = document.createElement('a');
+    brand.className = 'wordmark';
+    brand.href = 'index.html';
+    brand.setAttribute('aria-label', 'Indra home');
+    brand.dataset.buttonVisibility = 'header-brand';
+    brand.append('INDRA');
+    const brandLine = document.createElement('span');
+    brandLine.textContent = 'by Manapattayil Textiles';
+    brand.append(brandLine);
+
+    const toggle = document.createElement('button');
+    toggle.className = 'menu-toggle';
+    toggle.type = 'button';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-controls', 'primary-nav');
+    toggle.setAttribute('aria-label', 'Open navigation');
+    toggle.dataset.buttonVisibility = 'header-menu-toggle';
+    toggle.innerHTML = '<span></span><span></span>';
+
+    const nav = document.createElement('nav');
+    nav.className = 'primary-nav';
+    nav.id = 'primary-nav';
+    nav.setAttribute('aria-label', 'Main navigation');
+    config.navigation.forEach((item) => {
+      const link = createConfiguredLink(item, '', createVisibilityKey('header-navigation', item.label));
+      if (item.activePages.includes(page)) {
+        link.classList.add('is-active');
+        link.setAttribute('aria-current', 'page');
+      }
+      nav.append(link);
+    });
+
+    const headerActions = document.createElement('div');
+    headerActions.className = 'header-actions';
+    headerActions.append(createConfiguredLink(actions.primary, 'header-link'));
+    const secondaryAction = document.createElement('a');
+    secondaryAction.className = 'bag-link';
+    secondaryAction.href = actions.secondary.href;
+    secondaryAction.setAttribute('aria-label', actions.secondary.ariaLabel);
+    secondaryAction.hidden = actions.secondary.visible === false;
+    secondaryAction.append(actions.secondary.label);
+    const badge = document.createElement('span');
+    badge.textContent = actions.secondary.badge;
+    secondaryAction.append(badge);
+    headerActions.append(secondaryAction);
+
+    header.append(brand, toggle, nav, headerActions);
+    headerMount.replaceWith(header);
+  }
+
+  const footerMount = document.querySelector('[data-site-footer]');
+  if (footerMount) {
+    const footer = document.createElement('footer');
+    footer.className = 'site-footer';
+    const footerMain = document.createElement('div');
+    footerMain.className = 'footer-main';
+
+    const footerBrand = document.createElement('div');
+    footerBrand.className = 'footer-brand';
+    const footerWordmark = document.createElement('a');
+    footerWordmark.className = 'wordmark';
+    footerWordmark.href = 'index.html';
+    footerWordmark.dataset.buttonVisibility = 'footer-brand';
+    footerWordmark.append('INDRA');
+    const footerBrandLine = document.createElement('span');
+    footerBrandLine.textContent = 'by Manapattayil Textiles';
+    footerWordmark.append(footerBrandLine);
+    const tagline = document.createElement('p');
+    tagline.textContent = config.footer.tagline;
+    footerBrand.append(footerWordmark, tagline);
+    footerMain.append(footerBrand);
+
+    config.footer.columns.forEach((column) => {
+      const nav = document.createElement('nav');
+      nav.className = `footer-column${column.className ? ` ${column.className}` : ''}`;
+      nav.setAttribute('aria-label', column.label);
+      const heading = document.createElement('h2');
+      heading.textContent = column.label === 'Social platforms' ? 'Social' : column.label;
+      nav.append(heading);
+      column.items.forEach((item) => {
+        nav.append(createConfiguredLink(item));
+      });
+      footerMain.append(nav);
+    });
+
+    const footerBottom = document.createElement('div');
+    footerBottom.className = 'footer-bottom';
+    const legal = document.createElement('div');
+    legal.className = 'footer-legal';
+    config.footer.legal.forEach((label) => {
+      const item = document.createElement('span');
+      item.textContent = label;
+      legal.append(item);
+    });
+    const copyright = document.createElement('small');
+    copyright.append(`© ${config.footer.copyrightStartYear}–`);
+    const year = document.createElement('span');
+    year.dataset.year = '';
+    copyright.append(year, ` ${config.footer.copyright}`);
+    footerBottom.append(legal, copyright);
+    footer.append(footerMain, footerBottom);
+    footerMount.replaceWith(footer);
+  }
+}
+
+renderSiteShell();
+
 const menuToggle = document.querySelector('.menu-toggle');
 const primaryNav = document.querySelector('.primary-nav');
+
+function applyButtonVisibility() {
+  const visibility = window.indraSiteConfig?.buttonVisibility || {};
+  document.querySelectorAll('[data-filter]').forEach((button) => {
+    button.dataset.buttonVisibility = `collection-filter:${button.dataset.filter}`;
+  });
+  document.querySelectorAll('[data-tab]').forEach((button) => {
+    button.dataset.buttonVisibility = `product-tab:${button.dataset.tab}`;
+  });
+  document.querySelectorAll('[data-button-visibility]').forEach((control) => {
+    const key = control.dataset.buttonVisibility;
+    const group = key.split(':')[0];
+    const isVisible = visibility[key] ?? visibility[group] ?? true;
+    control.hidden = isVisible === false;
+  });
+}
 
 if (menuToggle && primaryNav) {
   menuToggle.addEventListener('click', () => {
@@ -225,7 +380,7 @@ document.querySelectorAll('[data-social-links]').forEach((container) => {
   });
 });
 
-document.querySelectorAll('.footer-social > span').forEach((profile) => {
+document.querySelectorAll('.footer-social > span, .footer-social > a').forEach((profile) => {
   const name = profile.textContent.split('·')[0].trim();
   const icon = createSocialIcon(name);
   if (icon) profile.prepend(icon);
@@ -301,6 +456,7 @@ if (currentProduct && document.querySelector('[data-product-name]')) {
         const button = document.createElement('button');
         button.className = `thumbnail${index === 0 ? ' is-active' : ''}`;
         button.type = 'button';
+        button.dataset.buttonVisibility = `product-thumbnail:${index + 1}`;
         button.setAttribute('aria-label', `View image ${index + 1}: ${item.alt}`);
         const thumbnailImage = makeImage(item.src, '');
         button.append(thumbnailImage);
@@ -323,6 +479,7 @@ if (currentProduct && document.querySelector('[data-product-name]')) {
     currentProduct.sizes.forEach((size) => {
       const button = document.createElement('button');
       button.type = 'button';
+      button.dataset.buttonVisibility = `product-size-option:${size.toLowerCase()}`;
       button.textContent = size;
       button.setAttribute('aria-pressed', 'false');
       button.addEventListener('click', () => {
@@ -368,3 +525,5 @@ document.querySelectorAll('[data-open-tab]').forEach((button) => {
     document.querySelector('.product-tabs')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
+
+applyButtonVisibility();

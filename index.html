@@ -10,21 +10,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="site-config.js" defer></script>
   <script src="products.js" defer></script>
   <script src="script.js" defer></script>
 </head>
 <body>
-  <header class="site-header">
-    <a class="wordmark" href="index.html" aria-label="Indra home">INDRA<span>by Manapattayil Textiles</span></a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open navigation"><span></span><span></span></button>
-    <nav class="primary-nav" id="primary-nav" aria-label="Main navigation">
-      <a class="is-active" href="index.html">Home</a>
-      <a href="explore.html">Collections</a>
-      <a href="our-story.html">Our Story</a>
-      <a href="our-story.html#heritage">Heritage</a>
-    </nav>
-    <div class="header-actions"><a class="header-link" href="explore.html">Find your fit</a><a class="bag-link" href="product.html" aria-label="Shopping bag">Bag <span>0</span></a></div>
-  </header>
+  <div data-site-header></div>
 
   <main>
     <section class="home-hero">
@@ -33,7 +24,7 @@
         <p class="eyebrow">Style for every role she plays</p>
         <h1>Made for<br>Her Every Day.</h1>
         <p class="intro">Contemporary styles designed for women who work, create, lead and live.</p>
-        <div class="button-row"><a class="button button-dark" href="explore.html">Explore Indra <span aria-hidden="true">↗</span></a><a class="button button-outline" href="our-story.html">Our story</a></div>
+        <div class="button-row"><a class="button button-dark" data-button-visibility="home-hero:explore" href="explore.html">Explore Indra <span aria-hidden="true">↗</span></a><a class="button button-outline" data-button-visibility="home-hero:story" href="our-story.html">Our story</a></div>
       </div>
       <p class="hero-note">Work. Create.<br>Lead. Live.</p>
     </section>
@@ -76,15 +67,6 @@
     <section class="online-section page-gutter" id="shop-online"><div><p class="eyebrow">Shop Indra Online</p><h2>Choose a marketplace.</h2></div><div class="marketplace-grid" data-marketplaces></div></section>
     <section class="social-section page-gutter" id="follow"><div class="social-heading"><p class="eyebrow">Follow Indra</p><h2>Stories from the wardrobe.</h2><p>Official social profiles will be linked here once confirmed.</p><div class="social-links" data-social-links></div></div><div class="social-image-grid"><a href="product.html?id=everyday-kurti-blue"><img src="Images/blue-kurti-details.jpg" data-local-image data-fallback="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=700&q=80" alt="Indra blue kurti details"><span>Everyday, in blue</span></a><a href="product.html?id=embroidered-kurti-cocoa"><img src="Images/cocoa-embroidered-kurti.jpg" data-local-image data-fallback="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=700&q=80" alt="Indra embroidered kurti"><span>Details that stay with you</span></a><a href="product.html?id=floral-kurta-mint"><img src="Images/floral-kurta-styling.jpg" data-local-image data-fallback="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=80" alt="Indra floral kurta"><span>Colour for her day</span></a></div></section>
   </main>
-  <footer class="site-footer">
-    <div class="footer-main">
-      <div class="footer-brand"><a class="wordmark" href="index.html">INDRA<span>by Manapattayil Textiles</span></a><p>Made for her every day.</p></div>
-      <nav class="footer-column" aria-label="Indra"><h2>Indra</h2><a href="our-story.html">Our Story</a><a href="explore.html">Collections</a><a href="product.html">Featured Products</a><a href="index.html#collaborations">Collaborations</a><a href="index.html#initiatives">Initiatives</a><a href="index.html#events">Events</a></nav>
-      <nav class="footer-column" aria-label="Customer care"><h2>Customer Care</h2><span>Contact · details to be added</span><a href="index.html#stores">Stores</a></nav>
-      <nav class="footer-column" aria-label="Shop"><h2>Shop</h2><span>Amazon</span><span>Meesho</span><span>Flipkart</span></nav>
-      <nav class="footer-column footer-social" aria-label="Social platforms"><h2>Social</h2><span>Instagram</span><span>YouTube</span><span>Facebook</span></nav>
-    </div>
-    <div class="footer-bottom"><div class="footer-legal"><span>Privacy Policy</span><span>Terms &amp; Conditions</span><span>Shipping Policy</span><span>Return Policy</span></div><small>© 1980–<span data-year></span> Indra by Manapattayil Textiles. All rights reserved.</small></div>
-  </footer>
+  <div data-site-footer></div>
 </body>
 </html>
